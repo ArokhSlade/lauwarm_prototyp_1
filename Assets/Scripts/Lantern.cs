@@ -10,32 +10,48 @@ public class Lantern : MonoBehaviour
 
     void Update()
     {
-        detector.radius = light.range;
+        //detector.radius = light.range;
     }
 
-    void FixedUpdate()
+    //void FixedUpdate()
+    //{
+    //    Collider[] overlaps = Physics.OverlapSphere(transform.position, light.range);
+    //    foreach (var thing in overlaps)
+    //    {
+    //        var camouflaged = thing.GetComponent<Camouflaged>();
+
+    //        if (camouflaged == null) continue;
+
+    //        if (camouflaged.Type.HasFlag(detectedTypes))
+    //        {
+    //            camouflaged.Reveal();
+    //        } else
+    //        {
+    //            camouflaged.Hide();
+    //        }
+    //    }
+    //}
+
+    private void OnTriggerEnter(Collider other)
     {
-        Collider[] overlaps = Physics.OverlapSphere(transform.position, light.range);
-        foreach (var thing in overlaps)
+        Debug.Log("Trigger Enter");
+        var camouflaged = other.GetComponent<Camouflaged>();
+
+        if (camouflaged == null) return;
+
+        if (camouflaged.Type.HasFlag(detectedTypes))
         {
-            var camouflaged = thing.GetComponent<Camouflaged>();
-
-            if (camouflaged == null) continue;
-
-            if (camouflaged.Type.HasFlag(detectedTypes))
-            {
-                camouflaged.Reveal();
-            } else
-            {
-                camouflaged.Hide();
-            }
+            camouflaged.Reveal();
+        }
+        else
+        {
+            camouflaged.Hide();
         }
     }
 
-
     private void OnTriggerExit(Collider collider)
     {
-        Debug.Log("Collision Exit");
+        Debug.Log("Trigger Exit");
         var camouflaged = collider.gameObject.GetComponent<Camouflaged>();
 
         if (camouflaged != null)
