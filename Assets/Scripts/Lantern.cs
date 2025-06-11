@@ -10,7 +10,7 @@ public class Lantern : MonoBehaviour
 
     void Update()
     {
-        //detector.radius = light.range;
+        detector.radius = light.range;
     }
 
     //void FixedUpdate()
