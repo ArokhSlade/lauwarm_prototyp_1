@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -5,8 +6,14 @@ public class Lantern : MonoBehaviour
 {
     [SerializeField] Light light;
     [SerializeField] CamouflageType detectedTypes;
+    [SerializeField] SphereCollider detector;
 
     void Update()
+    {
+        detector.radius = light.range;
+    }
+
+    void FixedUpdate()
     {
         Collider[] overlaps = Physics.OverlapSphere(transform.position, light.range);
         foreach (var thing in overlaps)
@@ -23,5 +30,18 @@ public class Lantern : MonoBehaviour
                 camouflaged.Hide();
             }
         }
+    }
+
+
+    private void OnTriggerExit(Collider collider)
+    {
+        Debug.Log("Collision Exit");
+        var camouflaged = collider.gameObject.GetComponent<Camouflaged>();
+
+        if (camouflaged != null)
+        {
+            camouflaged.Hide();
+        }
+       
     }
 }
