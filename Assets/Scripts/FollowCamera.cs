@@ -18,5 +18,7 @@ public class FollowCamera : MonoBehaviour
             ref currentVelocity,
             smoothTime
         );
+
+        transform.LookAt(targetObject.transform);
     }
 }

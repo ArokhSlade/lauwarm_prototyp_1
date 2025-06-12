@@ -1,6 +1,8 @@
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.EventSystems;
 
+[RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(PlayerInput))]
 public class PlayerController : MonoBehaviour
 {
