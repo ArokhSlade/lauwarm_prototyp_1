@@ -1,8 +1,8 @@
 using UnityEngine;
-
+using System.Collections.Generic;
 public class Ritual_Upgrade : MonoBehaviour
 {
-    [SerializeField] Renderer upgradableCrop;
+    [SerializeField] List<Renderer> upgradableCrops;
     [SerializeField] GameObject fragileCrop;
     [SerializeField] Material upgradedMaterial;
 
@@ -13,7 +13,12 @@ public class Ritual_Upgrade : MonoBehaviour
 
     public void UpgradeCrops()
     {
-        upgradableCrop.material = upgradedMaterial;
+        foreach (var upgradableCrop in upgradableCrops)
+        {
+            upgradableCrop.material = upgradedMaterial;
+
+        }
+
         fragileCrop.SetActive(false);
     }
 
