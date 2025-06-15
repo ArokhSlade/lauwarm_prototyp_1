@@ -15,18 +15,22 @@ namespace TicTacToe
     /// </summary>
     public class Board : MonoBehaviour
     {
-
         FieldState[,] boardState = new FieldState[3,3]; 
         Field[,] fields; 
 
+        void Update()
+        {
+            var winner = DetermineWinner();
+        }
+
         public void UpdateModel(Vector2Int coords, FieldState state)
         {
-            RectInt bounds = new RectInt(0, 0, 2, 2);
+            RectInt bounds = new RectInt(0, 0, 3, 3);
             Debug.Assert(bounds.Contains(coords));
             boardState[coords.x, coords.y] = state;
         }
 
-        FieldState DetermineWinner()
+        public FieldState DetermineWinner()
         {
             FieldState result = FieldState.Empty;
 
@@ -119,7 +123,7 @@ namespace TicTacToe
             FieldState winner = boardState[0,0];
 
             // unless corner is marked, skip to check other diagonal
-            if (winner == FieldState.Empty)
+            if (winner != FieldState.Empty)
             {
                 // all elements on the diagonal must match
                 for (int i = 1; i < 3; ++i)
