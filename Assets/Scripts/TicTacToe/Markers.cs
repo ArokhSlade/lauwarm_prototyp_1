@@ -5,25 +5,21 @@ namespace TicTacToe
 {
     public class Markers : MonoBehaviour
     {
-        private static Markers instance = new();
-        private bool isInitialized = false;
+        private static Markers instance;
         public static Markers Instance => instance;
+
         [SerializeField] GameObject XMarkerPrefab;
         [SerializeField] GameObject OMarkerPrefab;
-        private Markers()
-        { 
-            Initialize();
-        }
 
-        public void Initialize()
+        void Awake()
         {
-            if (isInitialized)
+            if (instance != null)
             {
+                Destroy(this);
                 return;
             }
-            //TODO(Gerald, 2025 06 15): empty for now
 
-            isInitialized = true;
+            instance = this;
         }
 
         public GameObject Create(FieldState markerType, Transform parent)
