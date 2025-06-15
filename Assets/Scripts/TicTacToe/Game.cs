@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TicTacToe
 {
@@ -15,8 +16,10 @@ namespace TicTacToe
         [SerializeField] Board board;
 
         int playerCount = 2;
-        FieldState currentPlayer;
+        [SerializeField] FieldState currentPlayer;
         GameState state = GameState.PreGame;
+
+        UnityAction TurnFinished;
 
         void Start()
         {
@@ -81,6 +84,12 @@ namespace TicTacToe
             {
                 board.SubmitMark(currentPlayerMark, coords);
             }
+        }
+
+
+        public void OnMarkSubmitted()
+        {
+            FinishTurn();
         }
     }
 }

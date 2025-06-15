@@ -8,6 +8,7 @@ namespace TicTacToe
     {
         [SerializeField] TMPro.TMP_Text winnerLabel;
         [SerializeField] Board board;
+
         public void UpdateWinnerLabel()
         {
             FieldState winner = board.DetermineWinner();

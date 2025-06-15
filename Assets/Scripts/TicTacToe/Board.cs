@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace TicTacToe
 {
@@ -16,6 +17,8 @@ namespace TicTacToe
     public class Board : MonoBehaviour
     {
         [SerializeField] Game game;
+
+        public UnityAction MarkSubmitted;
 
         FieldState[,] boardState = new FieldState[3,3];
 
@@ -38,6 +41,17 @@ namespace TicTacToe
             }
         }
 
+        void OnEnable()
+        {
+            MarkSubmitted += game.OnMarkSubmitted;
+        }
+
+        void OnDisable()
+        {
+
+            MarkSubmitted -= game.OnMarkSubmitted;
+        }
+
         void Start()
         {
             Field[] childFields = transform.GetComponentsInChildren<Field>();
@@ -55,6 +69,11 @@ namespace TicTacToe
             boardState[coords.x, coords.y] = mark;
             Field field = GetField(coords);
             field.SubmitMark(mark);
+        }
+
+        public void OnMarkSubmitted()
+        {
+            MarkSubmitted(); // notify game
         }
 
         public void RequestMark(Vector2Int coords)
