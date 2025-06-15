@@ -76,6 +76,11 @@ namespace TicTacToe
 
         void ConsiderMark(FieldState currentPlayerMark, Vector2Int coords)
         {
+            if (state != GameState.Turn)
+            {
+                return;
+            }
+
             if (currentPlayerMark == FieldState.Empty)
             {
                 return;
