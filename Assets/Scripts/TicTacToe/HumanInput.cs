@@ -8,7 +8,14 @@ namespace TicTacToe
     public class HumanInput : MonoBehaviour
     {
         [SerializeField] FieldState markType;
+        [SerializeField] LayerMask layerMask;
+
         Camera cam;
+
+        void Reset()
+        {
+             layerMask = LayerMask.GetMask(new string[] { "TicTacToeField" });
+        }
 
         void Start()
         {
@@ -19,10 +26,6 @@ namespace TicTacToe
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-
-            LayerMask layerMask = 0;
-            int fieldLayer = LayerMask.NameToLayer("TicTacToeField");
-            layerMask |= 1 << fieldLayer;
             
             bool wasHit = Physics.Raycast(ray, out hit, 100f, layerMask);
             Debug.DrawRay(ray.origin, ray.direction);
