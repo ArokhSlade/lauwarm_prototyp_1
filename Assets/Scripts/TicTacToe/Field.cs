@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 namespace TicTacToe
 {
@@ -12,12 +13,27 @@ namespace TicTacToe
         [SerializeField] Board board;
         [SerializeField] GameObject currentMarker = null;
 
+        public UnityAction MarkSubmitted;
+
+
         public Vector2Int Coords => gridCoords;
 
         void Start()
         {
             Debug.Assert(board != null);
         }
+
+        void OnEnable()
+        {
+            MarkSubmitted += board.OnMarkSubmitted;
+        }
+
+        void OnDisable()
+        {
+
+            MarkSubmitted -= board.OnMarkSubmitted;
+        }
+
 
         public bool IsMarked()
         {
@@ -43,6 +59,9 @@ namespace TicTacToe
             } 
             markedState = mark;
             currentMarker = Markers.Instance.Create(mark, this.transform);
+
+            // notify board
+            MarkSubmitted();
             return;
 
         }
