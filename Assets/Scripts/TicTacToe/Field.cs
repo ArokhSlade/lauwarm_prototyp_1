@@ -7,7 +7,14 @@ namespace TicTacToe
         // TODO(Gerald, 2025 06 15):
         // synchronize marked-state with the existence of a corresponding child marker-object
         // i.e. enforce single-source-of-truth / invariant
-        FieldState markedState = FieldState.Empty;
+        [SerializeField] FieldState markedState = FieldState.Empty;
+        [SerializeField] Vector2Int gridCoords;
+        [SerializeField] Board board;
+
+        void Start()
+        {
+            Debug.Assert(board != null);
+        }
 
         public bool IsMarked()
         {
@@ -40,6 +47,9 @@ namespace TicTacToe
 
             marker = Markers.Instance.Create(markerType, this.transform);
             markedState = state;
+
+            
+            board.UpdateModel(gridCoords, markedState);
         }
     }
 }
