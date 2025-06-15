@@ -15,6 +15,8 @@ namespace TicTacToe
     /// </summary>
     public class Board : MonoBehaviour
     {
+        [SerializeField] Game game;
+
         FieldState[,] boardState = new FieldState[3,3];
 
         //TODO(Gerald, 2025 06 15): generate fields automatically
@@ -48,27 +50,19 @@ namespace TicTacToe
             }
         }
 
-        //TOOD(Gerald, 2025 06 15): remove the mark parameter, and figure out who's playing from the game state
-        // would that imply forwarding the mark request even further, to the game?
-        // or would the board know who's playing
-        public void RequestMark(FieldState mark, Vector2Int coords)
+        public void SubmitMark(FieldState mark, Vector2Int coords)
         {
-            if (mark == FieldState.Empty)
-            {
-                return;
-            }
-
-            if (!ValidateCoords(coords))
-            {
-                return;
-            }
-
             boardState[coords.x, coords.y] = mark;
             Field field = GetField(coords);
             field.SubmitMark(mark);
         }
 
-        bool ValidateCoords(Vector2Int coords)
+        public void RequestMark(Vector2Int coords)
+        {
+            game.RequestMark(coords);
+        }
+
+        public bool ValidateCoords(Vector2Int coords)
         {
             RectInt bounds = new RectInt(0, 0, 3, 3);
             Debug.Assert(bounds.Contains(coords));
@@ -83,6 +77,12 @@ namespace TicTacToe
             }
 
             Field result = fields[coords.x, coords.y];
+            return result;
+        }
+
+        public bool IsFieldEmpty(Vector2Int coords)
+        {
+            bool result = boardState[coords.x, coords.y] == FieldState.Empty;
             return result;
         }
 

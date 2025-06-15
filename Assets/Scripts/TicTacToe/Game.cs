@@ -12,9 +12,10 @@ namespace TicTacToe
             PreGame, Turn, GameOver
         }
 
+        [SerializeField] Board board;
+
         int playerCount = 2;
         FieldState currentPlayer;
-        [SerializeField] Board board;
         GameState state = GameState.PreGame;
 
         void Start()
@@ -54,7 +55,32 @@ namespace TicTacToe
 
         void GameOver()
         {
+            bool isOver = board.DetermineWinner() != FieldState.Empty;
+            if (isOver)
+            {
+                state = GameState.GameOver;
+            }
+        }
 
+        public void RequestMark(Vector2Int coords)
+        {
+            if (!board.ValidateCoords(coords))
+            {
+                return;
+            }
+            ConsiderMark(currentPlayer, coords);
+        }
+
+        void ConsiderMark(FieldState currentPlayerMark, Vector2Int coords)
+        {
+            if (currentPlayerMark == FieldState.Empty)
+            {
+                return;
+            }
+            if (board.IsFieldEmpty(coords))
+            {
+                board.SubmitMark(currentPlayerMark, coords);
+            }
         }
     }
 }

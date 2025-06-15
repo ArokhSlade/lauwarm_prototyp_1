@@ -5,11 +5,12 @@ namespace TicTacToe
     public class Field : MonoBehaviour
     {
         // TODO(Gerald, 2025 06 15):
-        // synchronize marked-state with the existence of a corresponding child marker-object
+        // automate /enforce synchronization between marked-state and current-marker
         // i.e. enforce single-source-of-truth / invariant
         [SerializeField] FieldState markedState = FieldState.Empty;
         [SerializeField] Vector2Int gridCoords;
         [SerializeField] Board board;
+        [SerializeField] GameObject currentMarker = null;
 
         public Vector2Int Coords => gridCoords;
 
@@ -25,14 +26,25 @@ namespace TicTacToe
             return result;
         }
 
-        public void RequestMark(FieldState mark)
+        public void RequestMark()
         {
-            board.RequestMark(mark, gridCoords);
+            board.RequestMark(gridCoords);
         }
 
-        public void SubmitMark(FieldState markerType)
+        public void SubmitMark(FieldState mark)
         {
-            Markers.Instance.Create(markerType, this.transform);
+            if (markedState == mark)
+            {
+                return;
+            }
+            if (markedState != FieldState.Empty)
+            {
+                Destroy(currentMarker);
+            } 
+            markedState = mark;
+            currentMarker = Markers.Instance.Create(mark, this.transform);
+            return;
+
         }
     }
 }
