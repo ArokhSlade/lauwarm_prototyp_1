@@ -15,12 +15,75 @@ namespace TicTacToe
     /// </summary>
     public class Board : MonoBehaviour
     {
-        FieldState[,] boardState = new FieldState[3,3]; 
-        Field[,] fields; 
+        FieldState[,] boardState = new FieldState[3,3];
+
+        //TODO(Gerald, 2025 06 15): generate fields automatically
+        Field[,] fields;
 
         void Update()
         {
-            var winner = DetermineWinner();
+            
+        }
+
+        void Awake()
+        {
+            for (int row = 0; row < 3; ++row)
+            {
+                for (int col = 0; col < 3; ++col)
+                {
+                    boardState[row, col] = FieldState.Empty;
+                }
+            }
+        }
+
+        void Start()
+        {
+            Field[] childFields = transform.GetComponentsInChildren<Field>();
+            Debug.Assert(childFields.GetLength(0) == 3*3);
+            fields = new Field[3, 3];
+            foreach (Field field in childFields)
+            {
+                Vector2Int fieldCoords = field.Coords;
+                fields[fieldCoords.x, fieldCoords.y] = field;
+            }
+        }
+
+        //TOOD(Gerald, 2025 06 15): remove the mark parameter, and figure out who's playing from the game state
+        // would that imply forwarding the mark request even further, to the game?
+        // or would the board know who's playing
+        public void RequestMark(FieldState mark, Vector2Int coords)
+        {
+            if (mark == FieldState.Empty)
+            {
+                return;
+            }
+
+            if (!ValidateCoords(coords))
+            {
+                return;
+            }
+
+            boardState[coords.x, coords.y] = mark;
+            Field field = GetField(coords);
+            field.SubmitMark(mark);
+        }
+
+        bool ValidateCoords(Vector2Int coords)
+        {
+            RectInt bounds = new RectInt(0, 0, 3, 3);
+            Debug.Assert(bounds.Contains(coords));
+            return bounds.Contains(coords);
+        }
+
+        Field GetField(Vector2Int coords)
+        {
+            if (!ValidateCoords(coords))
+            { 
+                return null; 
+            }
+
+            Field result = fields[coords.x, coords.y];
+            return result;
         }
 
         public void UpdateModel(Vector2Int coords, FieldState state)

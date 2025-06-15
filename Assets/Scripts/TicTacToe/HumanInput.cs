@@ -7,6 +7,7 @@ namespace TicTacToe
     
     public class HumanInput : MonoBehaviour
     {
+        //TODO(Gerald, 2025 06 15): consider removing the player's identity from the class.
         [SerializeField] FieldState markType;
         [SerializeField] LayerMask layerMask;
 
@@ -42,7 +43,7 @@ namespace TicTacToe
 
             if (Input.GetMouseButtonUp((int)MouseButton.Left))
             {
-                field.Mark(markType);
+                field.RequestMark(markType);
             }
         }
     }

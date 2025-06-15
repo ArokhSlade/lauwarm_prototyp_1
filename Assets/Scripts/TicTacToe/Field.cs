@@ -11,6 +11,8 @@ namespace TicTacToe
         [SerializeField] Vector2Int gridCoords;
         [SerializeField] Board board;
 
+        public Vector2Int Coords => gridCoords;
+
         void Start()
         {
             Debug.Assert(board != null);
@@ -22,34 +24,15 @@ namespace TicTacToe
 
             return result;
         }
-        public void Mark(FieldState state)
+
+        public void RequestMark(FieldState mark)
         {
-            if (IsMarked())
-            {
-                return;
-            }
+            board.RequestMark(mark, gridCoords);
+        }
 
-            GameObject marker = null;
-            FieldState markerType = FieldState.Empty;
-
-            switch (state)
-            {
-                case FieldState.O:
-                    markerType = FieldState.O;
-
-                    break;
-                case FieldState.X:
-                    markerType = FieldState.X;
-                    break;
-                default:
-                    break;
-            }
-
-            marker = Markers.Instance.Create(markerType, this.transform);
-            markedState = state;
-
-            
-            board.UpdateModel(gridCoords, markedState);
+        public void SubmitMark(FieldState markerType)
+        {
+            Markers.Instance.Create(markerType, this.transform);
         }
     }
 }
