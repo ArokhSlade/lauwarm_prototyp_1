@@ -7,6 +7,14 @@ namespace Navigation
     {
         Vector2Int coords;
 
+        public HexCell(int x, int y)
+        {
+            coords = new Vector2Int(x, y);
+        }
+
+        public int X => coords.x;
+        public int Y => coords.y;
+
         static int Abs(int x)
         {
             return x < 0 ? -x : x;
