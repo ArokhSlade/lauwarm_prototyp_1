@@ -6,11 +6,19 @@ namespace Navigation
 {
     public class Pathfinder : MonoBehaviour
     {
-        HexGrid grid;
+        [SerializeField] HexGrid grid;
 
-        int EstimateCost(HexCell start, HexCell end)
+        int EstimateRestCost(HexCell start, HexCell end)
         {
             int result = HexCell.Difference(start, end);
+            return result;
+        }
+
+        int EstimateFullCost(Path path, HexCell goal)
+        {
+            int result;
+            result = path.Length + EstimateRestCost(path.End, goal);
+
             return result;
         }
 
@@ -21,9 +29,9 @@ namespace Navigation
 
             PriorityQueue<HexCell, int> openSet = new();
 
-            Dictionary<HexCell, Path> nodePahths= new();
+            Dictionary<HexCell, Path> nodePaths = new();
 
-            List<HexCell> neighbors = grid.GetNeighbors();
+            List<HexCell> neighbors = grid.GetNeighbors(start);
 
             return result;
         }

@@ -5,7 +5,7 @@ namespace Navigation
 {
     public class HexGrid : MonoBehaviour
     {
-        Grid grid;
+        [SerializeField] Grid grid;
 		
 		public List<HexCell> GetNeighbors(HexCell cell)
 		{
@@ -30,9 +30,5 @@ namespace Navigation
 
             return result;
 		}
-
-
-		
-		
     }
 }

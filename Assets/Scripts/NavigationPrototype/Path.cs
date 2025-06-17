@@ -7,10 +7,10 @@ namespace Navigation
     {
         List<HexCell> path;
 
-        public int Length()
-        {
-            return path.Count;
-        }
+        public HexCell Begin => path[0];
+        public HexCell End => path[-1];
+
+        public int Length => path.Count;
 
         public void Add(HexCell node)
         {
