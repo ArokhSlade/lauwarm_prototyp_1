@@ -39,7 +39,7 @@ namespace Navigation
 
             int currentCost = EstimateFullCost(currentPath, goal);
             AddToFringe(fringe, currentCost, currentHead);
-            
+
             paths[currentHead] = currentPath;
 
             bool searchSuccessful = false;
@@ -106,7 +106,7 @@ namespace Navigation
                                     Debug.Assert(fringe.ContainsKey(newNeighborCost));
                                     Debug.Assert(false == fringe[newNeighborCost].Contains(neighbor));
                                     fringe[newNeighborCost].Add(neighbor);
-                                //  |- else (i.e. they are NOT in visited):
+                                    //  |- else (i.e. they are NOT in visited):
                                 }
                                 else
                                 {
@@ -172,7 +172,7 @@ namespace Navigation
             fringe[cost].Add(cell);
         }
 
-        
+
         int EstimateRestCost(HexCell start, HexCell end)
         {
             int result = HexCell.Difference(start, end);

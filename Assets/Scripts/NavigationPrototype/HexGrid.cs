@@ -9,19 +9,19 @@ namespace Navigation
 		FlatTop
 	}
 
-    public class HexGrid : MonoBehaviour
-    {
+	public class HexGrid : MonoBehaviour
+	{
 		[SerializeField] Vector2Int dimensions;
-        [SerializeField] Grid grid;
-        [SerializeField] float debugRadius = .5f;
+		[SerializeField] Grid grid;
+		[SerializeField] float debugRadius = .5f;
 		[SerializeField] Vector3 worldCenter;
 		[SerializeField] List<Vector2Int> blockedCells = new();
 		[SerializeField] HashSet<Vector2Int> blockedCellsHashSet = new();
 
 		const HexType hexType = HexType.PointyTop;
-		
+
 		static HexCell invalidCell = new(int.MaxValue, int.MaxValue);
-        public static HexCell INVALID_CELL => invalidCell;
+		public static HexCell INVALID_CELL => invalidCell;
 
 		public Grid Grid => grid;
 
@@ -52,7 +52,7 @@ namespace Navigation
 			// if hex-grid is flat-top style
 			int x = cell.X;
 			int y = cell.Y;
-			switch(hexType)
+			switch (hexType)
 			{
 				case HexType.FlatTop:
 					top = TryGetCellAt(x, y + 1);
@@ -77,36 +77,36 @@ namespace Navigation
 					if (rowIsOdd)
 					{
 						topLeft = TryGetCellAt(x, y + 1);
-						topRight = TryGetCellAt(x+1, y + 1);
+						topRight = TryGetCellAt(x + 1, y + 1);
 						bottomLeft = TryGetCellAt(x, y - 1);
-						bottomRight = TryGetCellAt(x + 1, y - 1);                        
-                    }
+						bottomRight = TryGetCellAt(x + 1, y - 1);
+					}
 					else
 					{
 						topLeft = TryGetCellAt(x - 1, y + 1);
 						topRight = TryGetCellAt(x, y + 1);
 						bottomLeft = TryGetCellAt(x - 1, y - 1);
 						bottomRight = TryGetCellAt(x, y - 1);
-                    }
+					}
 
-                    if (left != INVALID_CELL) result.Add(left);
-                    if (topLeft != INVALID_CELL) result.Add(topLeft);
-                    if (topRight != INVALID_CELL) result.Add(topRight);
-                    if (right != INVALID_CELL) result.Add(right);
-                    if (bottomRight != INVALID_CELL) result.Add(bottomRight);
-                    if (bottomLeft != INVALID_CELL) result.Add(bottomLeft);
+					if (left != INVALID_CELL) result.Add(left);
+					if (topLeft != INVALID_CELL) result.Add(topLeft);
+					if (topRight != INVALID_CELL) result.Add(topRight);
+					if (right != INVALID_CELL) result.Add(right);
+					if (bottomRight != INVALID_CELL) result.Add(bottomRight);
+					if (bottomLeft != INVALID_CELL) result.Add(bottomLeft);
 
-                    break;
+					break;
 			}
 
-            return result;
+			return result;
 		}
 
 		HexCell TryGetCellAt(int x, int y)
 		{
 			HexCell result = new HexCell(x, y);
 
-            if (blockedCells.Contains(new Vector2Int(x,y)))
+			if (blockedCells.Contains(new Vector2Int(x, y)))
 			{
 				result = INVALID_CELL;
 			}
@@ -115,5 +115,5 @@ namespace Navigation
 		}
 
 
-    }
+	}
 }
