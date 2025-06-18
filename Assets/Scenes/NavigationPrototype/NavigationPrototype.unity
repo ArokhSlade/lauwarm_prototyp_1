@@ -413,6 +413,7 @@ MonoBehaviour:
   dimensions: {x: 10, y: 10}
   grid: {fileID: 1421531249}
   debugRadius: 1
+  worldCenter: {x: 0, y: 0, z: 0}
 --- !u!156049354 &1421531249
 Grid:
   m_ObjectHideFlags: 0
