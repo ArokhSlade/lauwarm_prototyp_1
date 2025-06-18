@@ -24,36 +24,6 @@ namespace Navigation
             return result;
         }
 
-        List<Path> UpdateFringe(SortedSet<Path> paths, Path path, List<HexCell> neighbors)
-        {
-            List<Path> result = new ();
-            paths.Remove(path);
-            
-            foreach(var neighbor in neighbors)
-            {
-                Path newPath = path.Clone();
-                newPath.Add(neighbor);
-                paths.Add(newPath);
-                result.Add(newPath);
-            }
-
-            return result;
-        }
-
-        void UpdateCostEstimatesAndFringe(Dictionary<HexCell, int> costEstimates, Dictionary<HexCell, Path> fringeCellsToPathsMap, List<Path> newPaths, HexCell goal)
-        {
-            foreach(Path path in newPaths)
-            {
-                HexCell cell = path.End;
-                int newCostEstimate = EstimateFullCost(path, goal);
-                if (!costEstimates.ContainsKey(cell) || costEstimates[cell] < newCostEstimate)
-                {
-                    costEstimates[cell] = newCostEstimate;
-                    fringeCellsToPathsMap[cell] = path;
-                }
-            }
-        }
-
         void UpdateFringe(SortedSet<Path> paths, Dictionary<HexCell, Path> fringe, Path path, List<HexCell> neighbors)
         {
             paths.Remove(path);
