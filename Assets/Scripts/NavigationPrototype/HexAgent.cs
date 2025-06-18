@@ -1,16 +1,24 @@
 using UnityEngine;
 
-public class HexAgent : MonoBehaviour
+
+namespace Navigation
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class HexAgent : MonoBehaviour
     {
-        
+        [SerializeField] HexCell start;
+        [SerializeField] HexCell goal;
+        [SerializeField] Pathfinder pathfinder;
+
+        void PlotPath()
+        {
+            Path path = pathfinder.FindPath(start, goal);
+
+            foreach (var hexCell in path)
+            {
+
+            }
+        }
+
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
