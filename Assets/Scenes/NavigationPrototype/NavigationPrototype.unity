@@ -253,7 +253,7 @@ GameObject:
   - component: {fileID: 242926519}
   - component: {fileID: 242926518}
   m_Layer: 0
-  m_Name: StartPoint_2
+  m_Name: Obstacle_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -472,10 +472,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c902405491fcca648a28796c57b8c927, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start: {fileID: 0}
-  goal: {fileID: 0}
-  pathfinder: {fileID: 0}
-  debugRadius: 0
+  start: {fileID: 1168524833}
+  goal: {fileID: 1837190559}
+  pathfinder: {fileID: 513851114}
+  debugRadius: 1
 --- !u!114 &513851114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -639,7 +639,7 @@ GameObject:
   - component: {fileID: 1168524831}
   - component: {fileID: 1168524830}
   m_Layer: 0
-  m_Name: StartPoint
+  m_Name: Start
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -886,7 +886,7 @@ GameObject:
   - component: {fileID: 1641713171}
   - component: {fileID: 1641713170}
   m_Layer: 0
-  m_Name: StartPoint_3
+  m_Name: Obstacle_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -994,7 +994,7 @@ GameObject:
   - component: {fileID: 1837190557}
   - component: {fileID: 1837190556}
   m_Layer: 0
-  m_Name: StartPoint_1
+  m_Name: Goal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
