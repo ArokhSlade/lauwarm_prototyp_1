@@ -8,6 +8,13 @@ namespace Navigation
 		[SerializeField] Vector2Int dimensions;
         [SerializeField] Grid grid;
         [SerializeField] float debugRadius;
+		[SerializeField] Vector3 worldCenter;
+
+		Vector3Int ToVec3Int(Vector2Int dims)
+		{
+			var result = new Vector3Int(dims.x, 0, dims.y);
+			return result;
+		}
 
         private void OnDrawGizmos()
         {
@@ -16,7 +23,12 @@ namespace Navigation
 				for (int y = 0; y < dimensions.y; ++y)
 				{
 					Gizmos.color = Color.blue;
-					Vector3 cellCenter = grid.CellToWorld(new Vector3Int(x,0,y));					
+
+					var cellCoords = new Vector2Int(x, y);
+					cellCoords -= dimensions / 2;
+
+					Vector3 cellCenter = grid.CellToWorld(ToVec3Int(cellCoords));
+
 					Gizmos.DrawSphere(cellCenter, debugRadius);
 				}
 			}
