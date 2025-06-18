@@ -32,12 +32,12 @@ namespace Navigation
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return (IEnumerator)path;
+            return path.GetEnumerator();
         }
 
         public IEnumerator<HexCell> GetEnumerator()
         {
-            return (IEnumerator<HexCell>)path;
+            return path.GetEnumerator();
         }
     }
 }

@@ -66,25 +66,29 @@ namespace Navigation
             Dictionary<HexCell, Path> fringe = new();
             fringe[start] = currentPath;
 
-            IComparer<Path> comparer = Comparer<Path>.Create((p1, p2) => {
+            IComparer<Path> comparer = Comparer<Path>.Create((p1, p2) =>
+            {
                 if (p1 == p2)
                 {
                     return 0;
-                }                
+                }
                 else
                 {
                     int estimate1 = EstimateFullCost(p1, goal);
                     int estimate2 = EstimateFullCost(p2, goal);
 
                     if (estimate1 < estimate2)
-                    { 
-                        return -1; 
+                    {
+                        return -1;
                     }
                     else
                     {
                         return 1;
                     }
+                }
+            
             });
+
 
             SortedSet<Path> paths = new(comparer);
             paths.Add(currentPath);
@@ -93,19 +97,19 @@ namespace Navigation
             int debugCount = 0;
             while (!searchSuccessful && debugCount < 1000)
             {
-                List<HexCell> neighbors = hexGrid.GetNeighbors(currentPath.End );
-                Debug.Log($"{paths}, {fringe}, {currentPath}, {neighbors}");
-                UpdateFringe(paths, fringe, currentPath, neighbors);            
-
                 if (fringe.ContainsKey(goal))
                 {
                     result = fringe[goal];
                     searchSuccessful = true;
-                } else
-                {
-                    currentPath = paths.Min;
                 }
-                debugCount++;
+                else
+                {
+                    List<HexCell> neighbors = hexGrid.GetNeighbors(currentPath.End );                
+                    UpdateFringe(paths, fringe, currentPath, neighbors);            
+                
+                    currentPath = paths.Min;
+                    debugCount++;
+                }
             }
             if (debugCount >= 1000)
             {
