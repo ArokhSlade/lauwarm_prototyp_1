@@ -10,9 +10,11 @@ namespace Navigation
         [SerializeField] float debugRadius;
 		[SerializeField] Vector3 worldCenter;
 
-		Vector3Int ToVec3Int(Vector2Int dims)
+		public Grid Grid => grid;
+
+		public Vector3Int ToVec3Int(Vector2Int coords)
 		{
-			var result = new Vector3Int(dims.x, 0, dims.y);
+			var result = new Vector3Int(coords.x, 0, coords.y);
 			return result;
 		}
 

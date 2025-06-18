@@ -8,7 +8,8 @@ namespace Navigation
 {
     public class Pathfinder : MonoBehaviour
     {
-        [SerializeField] HexGrid grid;
+        [SerializeField] HexGrid hexGrid;
+        public HexGrid HexGrid => hexGrid;
 
         int EstimateRestCost(HexCell start, HexCell end)
         {
@@ -73,7 +74,7 @@ namespace Navigation
 
             while (!searchSuccessful)
             {
-                List<HexCell> neighbors = grid.GetNeighbors(start);
+                List<HexCell> neighbors = hexGrid.GetNeighbors(start);
                 UpdateFringe(paths, fringe, currentPath, neighbors);            
 
                 if (fringe.ContainsKey(goal))

@@ -6,6 +6,7 @@ namespace Navigation
     public class HexCell : MonoBehaviour
     {
         Vector2Int coords;
+        public Vector2Int Coords => coords;
 
         public HexCell(int x, int y)
         {
