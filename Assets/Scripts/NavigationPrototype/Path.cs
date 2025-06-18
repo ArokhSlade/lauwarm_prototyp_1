@@ -16,5 +16,16 @@ namespace Navigation
         {
             path.Add(node);
         }
+
+        /// <summary>
+        /// deep copy
+        /// </summary>
+        /// <returns></returns>
+        public Path Clone()
+        {
+            Path result = new Path();
+            result.path.AddRange(this.path);
+            return result;
+        }
     }
 }
