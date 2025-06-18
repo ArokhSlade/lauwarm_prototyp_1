@@ -1,7 +1,8 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
-namespace RoundBasedMovementPrototype
+namespace Assets.RoundBasedMovementPrototype
 {
 #nullable enable
     enum RoundPhase
@@ -46,18 +47,19 @@ namespace RoundBasedMovementPrototype
         {
             if (selectedControllableUnit != null)
             {
-                selectedControllableUnit.UnhighlightUnit();
+                selectedControllableUnit.DeselectUnit();
             }
 
             if (unit == null) return;
 
             selectedControllableUnit = unit;
-            selectedControllableUnit.HighlightUnit();
+            selectedControllableUnit.SelectUnit();
         }
 
         private void CheckInteraction()
         {
-            if (Input.GetMouseButtonDown((int)MouseButton.LeftMouse))
+            if (Input.GetMouseButtonDown((int)MouseButton.LeftMouse)
+            && !EventSystem.current.IsPointerOverGameObject())
             {
                 Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
@@ -77,13 +79,14 @@ namespace RoundBasedMovementPrototype
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                ExecuteCommands();
-                currentPhase = RoundPhase.Executing;
+                EndPlanningPhase();
             }
         }
 
-        void ExecuteCommands()
+        public void EndPlanningPhase()
         {
+            currentPhase = RoundPhase.Executing;
+
             foreach (GameObject controllableObject in controllableUnits)
             {
                 if (!controllableObject.TryGetComponent(out ControllableUnit controllableUnit)) continue;
