@@ -1,3 +1,5 @@
+#nullable disable
+
 public class IdleActionState : ActionState
 {
     public override void Enter()

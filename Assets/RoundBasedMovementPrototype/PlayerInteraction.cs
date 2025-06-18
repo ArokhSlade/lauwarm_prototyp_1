@@ -1,10 +1,9 @@
-using System;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace RoundBasedMovementPrototype
 {
+#nullable enable
     enum RoundPhase
     {
         Planning = 10,
@@ -36,9 +35,24 @@ namespace RoundBasedMovementPrototype
                     CheckInteraction();
                     break;
                 case RoundPhase.Executing:
+                    SetSelectedControllableUnit(null);
+                    break;
                 default:
                     return;
             }
+        }
+
+        private void SetSelectedControllableUnit(ControllableUnit? unit)
+        {
+            if (selectedControllableUnit != null)
+            {
+                selectedControllableUnit.UnhighlightUnit();
+            }
+
+            if (unit == null) return;
+
+            selectedControllableUnit = unit;
+            selectedControllableUnit.HighlightUnit();
         }
 
         private void CheckInteraction()
@@ -49,15 +63,13 @@ namespace RoundBasedMovementPrototype
 
                 if (Physics.Raycast(ray, out RaycastHit controllableHit, 100f, controllableLayerMask))
                 {
-                    // TODO: Select controllable and nullify their set command
                     if (!controllableHit.collider.TryGetComponent(out ControllableUnit controllableUnit)) return;
 
                     Debug.Log($"Controllable at {controllableUnit.transform.position} clicked!");
-                    selectedControllableUnit = controllableUnit;
+                    SetSelectedControllableUnit(controllableUnit);
                 }
                 else if (selectedControllableUnit != null && Physics.Raycast(ray, out RaycastHit groundHit, 100f, groundLayerMask))
                 {
-                    // TODO: If controllable unit is currently selected, set their target with the hit point
                     Debug.Log($"Ground at position {groundHit.point} clicked!");
                     selectedControllableUnit.SetTargetPosition(groundHit.point);
                 }
@@ -78,9 +90,6 @@ namespace RoundBasedMovementPrototype
 
                 controllableUnit.StartExecution();
             }
-
-            // TODO: Reset selectedControllableUnit
-            selectedControllableUnit = null;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#nullable disable
+
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace TicTacToe
@@ -56,7 +58,7 @@ namespace TicTacToe
             if (markedState != FieldState.Empty)
             {
                 Destroy(currentMarker);
-            } 
+            }
             markedState = mark;
             currentMarker = Markers.Instance.Create(mark, this.transform);
 

@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#nullable disable
+
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -20,14 +22,14 @@ namespace TicTacToe
 
         public UnityAction MarkSubmitted;
 
-        FieldState[,] boardState = new FieldState[3,3];
+        FieldState[,] boardState = new FieldState[3, 3];
 
         //TODO(Gerald, 2025 06 15): generate fields automatically
         Field[,] fields;
 
         void Update()
         {
-            
+
         }
 
         void Awake()
@@ -55,7 +57,7 @@ namespace TicTacToe
         void Start()
         {
             Field[] childFields = transform.GetComponentsInChildren<Field>();
-            Debug.Assert(childFields.GetLength(0) == 3*3);
+            Debug.Assert(childFields.GetLength(0) == 3 * 3);
             fields = new Field[3, 3];
             foreach (Field field in childFields)
             {
@@ -91,8 +93,8 @@ namespace TicTacToe
         Field GetField(Vector2Int coords)
         {
             if (!ValidateCoords(coords))
-            { 
-                return null; 
+            {
+                return null;
             }
 
             Field result = fields[coords.x, coords.y];
@@ -138,7 +140,7 @@ namespace TicTacToe
         FieldState CheckRows()
         {
             FieldState winner = FieldState.Empty;
-            for (int row=0; row<3; ++row)
+            for (int row = 0; row < 3; ++row)
             {
                 // if this row has a winner, its mark will be in all slots, so also in the first slot.
                 winner = boardState[row, 0];
@@ -148,9 +150,9 @@ namespace TicTacToe
                     continue;
                 }
                 // otherwise, make sure the other slots in this row have the same mark
-                for (int col=1; col<3; ++col)
+                for (int col = 1; col < 3; ++col)
                 {
-                    if (boardState[row,col] != winner)
+                    if (boardState[row, col] != winner)
                     {
                         winner = FieldState.Empty;
                         break;
@@ -193,7 +195,7 @@ namespace TicTacToe
                     {
                         return winner;
                     }
-                }   
+                }
 
                 return winner;
             }
@@ -202,7 +204,7 @@ namespace TicTacToe
         FieldState CheckDiagonals()
         {
             // first diagonal, start in one corner
-            FieldState winner = boardState[0,0];
+            FieldState winner = boardState[0, 0];
 
             // unless corner is marked, skip to check other diagonal
             if (winner != FieldState.Empty)
@@ -211,7 +213,7 @@ namespace TicTacToe
                 for (int i = 1; i < 3; ++i)
                 {
                     // if one doesn't reset and before trying other diagonal
-                    if (boardState[i,i] != winner)
+                    if (boardState[i, i] != winner)
                     {
                         winner = FieldState.Empty;
                         break;
@@ -232,7 +234,7 @@ namespace TicTacToe
             }
 
             // mind transposed indices
-            for (int row = 1, col = 1; row < 3 ; ++row, --col)
+            for (int row = 1, col = 1; row < 3; ++row, --col)
             {
                 if (boardState[row, col] != winner)
                 {

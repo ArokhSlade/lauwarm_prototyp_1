@@ -1,13 +1,15 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using UnityEngine;
 
 [Flags]
 public enum CamouflageType
 {
-    None    = 0,
-    Blue    = 1<<0,
-    Red     = 1<<1,
-    Yellow  = 1<<2,
+    None = 0,
+    Blue = 1 << 0,
+    Red = 1 << 1,
+    Yellow = 1 << 2,
 }
 
 public class Camouflaged : MonoBehaviour

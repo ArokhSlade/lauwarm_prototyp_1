@@ -1,3 +1,5 @@
+#nullable disable
+
 using UnityEngine;
 using System.Collections.Generic;
 public class Ritual_Upgrade : MonoBehaviour

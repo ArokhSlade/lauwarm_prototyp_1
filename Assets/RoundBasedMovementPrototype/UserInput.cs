@@ -1,3 +1,5 @@
+#nullable disable
+
 using TicTacTwo;
 using UnityEngine;
 using UnityEngine.UIElements;

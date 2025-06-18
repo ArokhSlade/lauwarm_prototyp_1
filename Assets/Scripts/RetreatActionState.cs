@@ -1,3 +1,5 @@
+#nullable disable
+
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyBrain))]

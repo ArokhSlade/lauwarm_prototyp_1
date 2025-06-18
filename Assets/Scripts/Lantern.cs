@@ -1,3 +1,5 @@
+#nullable disable
+
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -58,6 +60,6 @@ public class Lantern : MonoBehaviour
         {
             camouflaged.Hide();
         }
-       
+
     }
 }
