@@ -149,3 +149,4 @@ MonoBehaviour:
   speed: 3
   defaultColor: {r: 0.20784315, g: 0.41176474, b: 0.6313726, a: 0}
   highlightedColor: {r: 0.26177537, g: 0.688158, b: 0.84400004, a: 0}
+  targetMarkerPrefab: {fileID: 3028501000164952230, guid: 22109c54f7dce5a489675405b9c97d50, type: 3}
