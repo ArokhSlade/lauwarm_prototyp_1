@@ -473,7 +473,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   start: {fileID: 0}
-  end: {fileID: 0}
+  goal: {fileID: 0}
+  pathfinder: {fileID: 0}
+  debugRadius: 0
 --- !u!114 &513851114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -486,7 +488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e786df991f077ea488297850153d7515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 1421531248}
+  hexGrid: {fileID: 1421531248}
 --- !u!1 &702612301
 GameObject:
   m_ObjectHideFlags: 0

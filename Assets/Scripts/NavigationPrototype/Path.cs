@@ -6,10 +6,10 @@ namespace Navigation
 {
     public class Path : IEnumerable<HexCell>
     {
-        List<HexCell> path;
+        List<HexCell> path = new();
 
-        public HexCell Begin => path[0];
-        public HexCell End => path[-1];
+        public HexCell Begin => path.Count > 0 ? path[0] : new HexCell(0,0);
+        public HexCell End => path.Count > 0 ? path[path.Count-1] : new HexCell(0, 0);
 
         public int Length => path.Count;
 

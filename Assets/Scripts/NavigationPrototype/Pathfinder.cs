@@ -49,6 +49,7 @@ namespace Navigation
                 }
                 else
                 {
+
                     paths.Add(newPath);
                     fringe[neighbor] = newPath;
                 }
@@ -65,7 +66,20 @@ namespace Navigation
             Dictionary<HexCell, Path> fringe = new();
             fringe[start] = currentPath;
 
-            IComparer<Path> comparer = Comparer<Path>.Create((p1, p2) => p1.Length.CompareTo(p2.Length));
+            IComparer<Path> comparer = Comparer<Path>.Create((p1, p2) => {
+                if (p1 == p2)
+                {
+                    return 0;
+                }
+                else if (p1.Length < p2.Length)
+                { 
+                    return -1; 
+                }
+                else
+                {
+                    return 1;
+                }
+            });
 
             SortedSet<Path> paths = new(comparer);
             paths.Add(currentPath);
@@ -74,7 +88,8 @@ namespace Navigation
 
             while (!searchSuccessful)
             {
-                List<HexCell> neighbors = hexGrid.GetNeighbors(start);
+                List<HexCell> neighbors = hexGrid.GetNeighbors(currentPath.End );
+                Debug.Log($"{paths}, {fringe}, {currentPath}, {neighbors}");
                 UpdateFringe(paths, fringe, currentPath, neighbors);            
 
                 if (fringe.ContainsKey(goal))

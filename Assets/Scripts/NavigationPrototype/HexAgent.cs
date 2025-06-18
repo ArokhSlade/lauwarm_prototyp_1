@@ -7,8 +7,8 @@ namespace Navigation
 {
     public class HexAgent : MonoBehaviour
     {
-        [SerializeField] HexCell start;
-        [SerializeField] HexCell goal;
+        [SerializeField] Transform start;
+        [SerializeField] Transform goal;
         [SerializeField] Pathfinder pathfinder;
         [SerializeField] float debugRadius;
 
@@ -21,9 +21,15 @@ namespace Navigation
                 return null;
             }
 
-            Path path = pathfinder.FindPath(start, goal);
             HexGrid hexGrid = pathfinder.HexGrid;
             Grid grid = hexGrid.Grid;
+            var gridCell = grid.WorldToCell(start.position);
+            HexCell startHex = hexGrid.FromVec3Int(gridCell);
+            Debug.Log($"{start.position}, {gridCell}, {startHex}");
+            gridCell = grid.WorldToCell(goal.position);
+            HexCell goalHex = hexGrid.FromVec3Int(gridCell);
+
+            Path path = pathfinder.FindPath(startHex, goalHex);
 
             foreach (var hexCell in path)
             {
@@ -34,19 +40,31 @@ namespace Navigation
             return result;
         }
 
-        private void OnDrawGizmos()
+        void Update()
         {
-            if (debugRadius <= 0f)
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                return;
-            }
-
-            Gizmos.color = Color.yellow;
-            var positions = GetPathPositions();
-            foreach (var position in positions)
-            {
-                Gizmos.DrawSphere(position, debugRadius);
+                var positions = GetPathPositions();
+                foreach (var position in positions)
+                {
+                    Debug.Log($"{position}");
+                }
             }
         }
+
+        //private void OnDrawGizmos()
+        //{
+        //    if (debugRadius <= 0f)
+        //    {
+        //        return;
+        //    }
+
+        //    Gizmos.color = Color.yellow;
+        //    var positions = GetPathPositions();
+        //    foreach (var position in positions)
+        //    {
+        //        Gizmos.DrawSphere(position, debugRadius);
+        //    }
+        //}
     }
 }

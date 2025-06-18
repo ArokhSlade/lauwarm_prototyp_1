@@ -18,6 +18,13 @@ namespace Navigation
 			return result;
 		}
 
+		public HexCell FromVec3Int(Vector3Int coords)
+		{
+			HexCell result = new HexCell(coords.x, coords.z);
+
+			return result;
+		}
+
         private void OnDrawGizmos()
         {
 			for (int x = 0; x < dimensions.x; ++x)

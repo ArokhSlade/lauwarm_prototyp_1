@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Navigation
 {
-    public class HexCell : MonoBehaviour
+    public struct HexCell
     {
         Vector2Int coords;
         public Vector2Int Coords => coords;
