@@ -70,23 +70,28 @@ namespace Navigation
                 if (p1 == p2)
                 {
                     return 0;
-                }
-                else if (p1.Length < p2.Length)
-                { 
-                    return -1; 
-                }
+                }                
                 else
                 {
-                    return 1;
-                }
+                    int estimate1 = EstimateFullCost(p1, goal);
+                    int estimate2 = EstimateFullCost(p2, goal);
+
+                    if (estimate1 < estimate2)
+                    { 
+                        return -1; 
+                    }
+                    else
+                    {
+                        return 1;
+                    }
             });
 
             SortedSet<Path> paths = new(comparer);
             paths.Add(currentPath);
 
             bool searchSuccessful = false;
-
-            while (!searchSuccessful)
+            int debugCount = 0;
+            while (!searchSuccessful && debugCount < 1000)
             {
                 List<HexCell> neighbors = hexGrid.GetNeighbors(currentPath.End );
                 Debug.Log($"{paths}, {fringe}, {currentPath}, {neighbors}");
@@ -100,6 +105,11 @@ namespace Navigation
                 {
                     currentPath = paths.Min;
                 }
+                debugCount++;
+            }
+            if (debugCount >= 1000)
+            {
+                Debug.LogError("looks like infinite loop");
             }
 
             Debug.Assert(result != null);
