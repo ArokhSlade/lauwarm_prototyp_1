@@ -5,9 +5,24 @@ namespace Navigation
 {
     public class HexGrid : MonoBehaviour
     {
+		[SerializeField] Vector2Int dimensions;
         [SerializeField] Grid grid;
-		
-		public List<HexCell> GetNeighbors(HexCell cell)
+        [SerializeField] float debugRadius;
+
+        private void OnDrawGizmos()
+        {
+			for (int x = 0; x < dimensions.x; ++x)
+			{
+				for (int y = 0; y < dimensions.y; ++y)
+				{
+					Gizmos.color = Color.blue;
+					Vector3 cellCenter = grid.CellToWorld(new Vector3Int(x,0,y));					
+					Gizmos.DrawSphere(cellCenter, debugRadius);
+				}
+			}
+        }
+
+        public List<HexCell> GetNeighbors(HexCell cell)
 		{
 			List<HexCell> result = new();
 			HexCell top, topLeft, topRight, bottom, bottomLeft, bottomRight;
