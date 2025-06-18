@@ -1,3 +1,6 @@
-public enum SceneNames {
+#nullable disable
+
+public enum SceneNames
+{
     SampleScene,
 }

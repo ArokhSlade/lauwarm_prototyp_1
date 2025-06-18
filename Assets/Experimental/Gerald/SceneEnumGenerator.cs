@@ -1,3 +1,5 @@
+#nullable disable
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
@@ -27,7 +29,7 @@ public class SceneEnumGenerator : MonoBehaviour
         using (StreamWriter file = new StreamWriter(Path.Combine(folderPath, fileName)))
         {
             file.WriteLine("public enum SceneNames {");
-            
+
             foreach (string sceneName in sceneNames)
             {
                 if (sceneName != null && !sceneName.Equals(string.Empty))
@@ -37,7 +39,7 @@ public class SceneEnumGenerator : MonoBehaviour
             }
 
             file.WriteLine("}");
-        }        
+        }
     }
 
     void GenerateEnumFile()

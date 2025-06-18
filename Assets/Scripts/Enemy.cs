@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿#nullable disable
+
+using UnityEngine;
 using UnityEngine.UIElements;
 
 public class Enemy : MonoBehaviour

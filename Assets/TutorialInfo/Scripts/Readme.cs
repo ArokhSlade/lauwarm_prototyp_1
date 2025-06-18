@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable disable
+
+using System;
 using UnityEngine;
 
 public class Readme : ScriptableObject

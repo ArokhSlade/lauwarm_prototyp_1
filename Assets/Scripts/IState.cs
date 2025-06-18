@@ -1,3 +1,5 @@
+#nullable disable
+
 public interface IState
 {
     void Enter();

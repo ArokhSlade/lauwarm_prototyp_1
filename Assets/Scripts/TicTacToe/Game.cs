@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#nullable disable
+
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -48,7 +50,8 @@ namespace TicTacToe
             if (currentPlayer == FieldState.X)
             {
                 result = FieldState.O;
-            } else
+            }
+            else
             {
                 result = FieldState.X;
             }

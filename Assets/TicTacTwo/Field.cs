@@ -1,3 +1,5 @@
+#nullable disable
+
 namespace TicTacTwo
 {
     public enum FieldState
