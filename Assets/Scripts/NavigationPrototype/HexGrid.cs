@@ -19,18 +19,6 @@ namespace Navigation
 
 		public Grid Grid => grid;
 
-		public Vector3Int ToVec3Int(Vector2Int coords)
-		{
-			var result = new Vector3Int(coords.x, 0, coords.y);
-			return result;
-		}
-
-		public HexCell FromVec3Int(Vector3Int coords)
-		{
-			HexCell result = new HexCell(coords.x, coords.z);
-
-			return result;
-		}
 
 		private void OnDrawGizmos()
 		{
@@ -39,11 +27,10 @@ namespace Navigation
 				for (int y = 0; y < dimensions.y; ++y)
 				{
 					Gizmos.color = Color.blue;
-
 					var cellCoords = new Vector2Int(x, y);
 					cellCoords -= dimensions / 2;
 
-					Vector3 cellCenter = grid.GetCellCenterWorld(ToVec3Int(cellCoords));
+					Vector3 cellCenter = grid.GetCellCenterWorld(new Vector3Int(cellCoords.x, cellCoords.y, 0));
 
 					Gizmos.DrawSphere(cellCenter, debugRadius);
 				}
@@ -88,7 +75,7 @@ namespace Navigation
 					result.Add(bottomRight);
 					break;
 				case HexType.PointyTop:
-					bool rowIsOdd = (y | 1) == 1;
+					bool rowIsOdd = (y & 1) == 1;
 
 					left = new(x - 1, y);
 					right = new(x + 1, y);

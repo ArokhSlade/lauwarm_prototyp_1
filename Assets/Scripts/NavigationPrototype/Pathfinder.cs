@@ -106,7 +106,11 @@ namespace Navigation
             int debugCount = 0;
             while (!searchSuccessful && debugCount < 1000)
             {
-                if (fringe.ContainsKey(goal))
+                if (debugCount >= 500)
+                {
+                    Debug.Assert(false, "probably infinite loop");
+                }
+                    if (fringe.ContainsKey(goal))
                 {
                     result = fringe[goal];
                     searchSuccessful = true;

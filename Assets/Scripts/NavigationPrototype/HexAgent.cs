@@ -24,16 +24,16 @@ namespace Navigation
             HexGrid hexGrid = pathfinder.HexGrid;
             Grid grid = hexGrid.Grid;
             var gridCell = grid.WorldToCell(start.position);
-            HexCell startHex = hexGrid.FromVec3Int(gridCell);
+            HexCell startHex = new(gridCell.x,gridCell.y);
             Debug.Log($"{start.position}, {gridCell}, {startHex}");
             gridCell = grid.WorldToCell(goal.position);
-            HexCell goalHex = hexGrid.FromVec3Int(gridCell);
+            HexCell goalHex = new (gridCell.x, gridCell.y);
 
             Path path = pathfinder.FindPath(startHex, goalHex);
 
             foreach (var hexCell in path)
             {
-                Vector3 position = grid.CellToWorld(hexGrid.ToVec3Int(hexCell.Coords));
+                Vector3 position = grid.GetCellCenterWorld(new Vector3Int(hexCell.X, hexCell.Y, 0));
                 result.Add(position);
             }
 
