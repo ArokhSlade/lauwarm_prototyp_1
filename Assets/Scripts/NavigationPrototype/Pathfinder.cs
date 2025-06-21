@@ -26,9 +26,12 @@ namespace Navigation
         }
 
         void UpdateFringe(SortedSet<Path> paths, Dictionary<HexCell, Path> fringe, Path path, List<HexCell> neighbors)
-        {
-            paths.Remove(path);
-
+        {   
+            // NOTE(Gerald, 2025 06 21): optimzation opportunity. we could delete the current path.
+            // but the algorithm needs the information that it existed so
+            // it won't be rediscovered and re-added,
+            // because that can lead to an infinite loop ping-ponging
+            // between two neighbors with identical estimated distance.
             foreach (var neighbor in neighbors)
             {
                 Path newPath = path.Clone();
