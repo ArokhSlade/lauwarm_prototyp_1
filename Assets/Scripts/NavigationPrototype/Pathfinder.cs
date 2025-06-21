@@ -25,9 +25,9 @@ namespace Navigation
             return result;
         }
 
-        void UpdateFringe(SortedSet<Path> paths, Dictionary<HexCell, Path> fringe, Path path, List<HexCell> neighbors, HashSet<HexCell> obsolete)
+        void UpdateFringe(SortedSet<Path> paths, Dictionary<HexCell, Path> fringe, Path path, List<HexCell> neighbors, HashSet<HexCell> visited)
         {
-            obsolete.Add(path.End);
+            visited.Add(path.End);
 
             foreach (var neighbor in neighbors)
             {
@@ -66,7 +66,7 @@ namespace Navigation
             Dictionary<HexCell, Path> fringe = new();
             fringe[start] = currentPath;
 
-            HashSet<HexCell> obsolete = new();
+            HashSet<HexCell> visited = new();
 
             IComparer<Path> comparer = Comparer<Path>.Create((p1, p2) =>
             {
@@ -74,11 +74,11 @@ namespace Navigation
                 {
                     return 0;
                 }
-                else if (obsolete.Contains(p1.End))
+                else if (visited.Contains(p1.End))
                 {
                     return 1;
                 }
-                else if (obsolete.Contains(p2.End))
+                else if (visited.Contains(p2.End))
                 {
                     return -1;
                 }
@@ -114,7 +114,7 @@ namespace Navigation
                 else
                 {
                     List<HexCell> neighbors = hexGrid.GetNeighbors(currentPath.End );                
-                    UpdateFringe(paths, fringe, currentPath, neighbors, obsolete);            
+                    UpdateFringe(paths, fringe, currentPath, neighbors, visited);            
                 
                     currentPath = paths.Min;
                     debugCount++;
