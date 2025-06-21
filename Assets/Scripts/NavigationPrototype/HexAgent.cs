@@ -54,17 +54,17 @@ namespace Navigation
 
         //private void OnDrawGizmos()
         //{
-        //    if (debugRadius <= 0f)
-        //    {
-        //        return;
-        //    }
+            //if (debugRadius <= 0f)
+            //{
+            //    return;
+            //}
 
-        //    Gizmos.color = Color.yellow;
-        //    var positions = GetPathPositions();
-        //    foreach (var position in positions)
-        //    {
-        //        Gizmos.DrawSphere(position, debugRadius);
-        //    }
+            //Gizmos.color = Color.yellow;
+            //var positions = GetPathPositions();
+            //foreach (var position in positions)
+            //{
+            //    Gizmos.DrawSphere(position, debugRadius);
+            //}
         //}
     }
 }

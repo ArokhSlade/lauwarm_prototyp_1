@@ -74,11 +74,11 @@ namespace Navigation
                 {
                     return 0;
                 }
-                else if (visited.Contains(p1.End))
+                else if (p1!=null && visited.Contains(p1.End))
                 {
                     return 1;
                 }
-                else if (visited.Contains(p2.End))
+                else if (p2!=null && visited.Contains(p2.End))
                 {
                     return -1;
                 }
