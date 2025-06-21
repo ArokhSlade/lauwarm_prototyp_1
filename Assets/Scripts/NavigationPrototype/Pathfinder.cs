@@ -25,13 +25,10 @@ namespace Navigation
             return result;
         }
 
-        void UpdateFringe(SortedSet<Path> paths, Dictionary<HexCell, Path> fringe, Path path, List<HexCell> neighbors)
-        {   
-            // NOTE(Gerald, 2025 06 21): optimzation opportunity. we could delete the current path.
-            // but the algorithm needs the information that it existed so
-            // it won't be rediscovered and re-added,
-            // because that can lead to an infinite loop ping-ponging
-            // between two neighbors with identical estimated distance.
+        void UpdateFringe(SortedSet<Path> paths, Dictionary<HexCell, Path> fringe, Path path, List<HexCell> neighbors, HashSet<HexCell> obsolete)
+        {
+            obsolete.Add(path.End);
+
             foreach (var neighbor in neighbors)
             {
                 Path newPath = path.Clone();
@@ -69,11 +66,21 @@ namespace Navigation
             Dictionary<HexCell, Path> fringe = new();
             fringe[start] = currentPath;
 
+            HashSet<HexCell> obsolete = new();
+
             IComparer<Path> comparer = Comparer<Path>.Create((p1, p2) =>
             {
                 if (p1 == p2)
                 {
                     return 0;
+                }
+                else if (obsolete.Contains(p1.End))
+                {
+                    return 1;
+                }
+                else if (obsolete.Contains(p2.End))
+                {
+                    return -1;
                 }
                 else
                 {
@@ -92,8 +99,7 @@ namespace Navigation
             
             });
 
-
-            SortedSet<Path> paths = new(comparer);
+            SortedSet<Path> paths = new(comparer);            
             paths.Add(currentPath);
 
             bool searchSuccessful = false;
@@ -108,7 +114,7 @@ namespace Navigation
                 else
                 {
                     List<HexCell> neighbors = hexGrid.GetNeighbors(currentPath.End );                
-                    UpdateFringe(paths, fringe, currentPath, neighbors);            
+                    UpdateFringe(paths, fringe, currentPath, neighbors, obsolete);            
                 
                     currentPath = paths.Min;
                     debugCount++;
