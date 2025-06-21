@@ -21,9 +21,15 @@ namespace Navigation
             return x < 0 ? -x : x;
         }
 
+        /// <summary>
+        /// manhatten distance.
+        /// </summary>
+        /// <param name="first"></param>
+        /// <param name="second"></param>
+        /// <returns></returns>
         public static int Difference(HexCell first, HexCell second)
         {
-            int result = Abs(second.coords.y - first.coords.y) - Abs(second.coords.x - first.coords.x);
+            int result = Abs(second.coords.y - first.coords.y) + Abs(second.coords.x - first.coords.x);
 
             return result;
         }
