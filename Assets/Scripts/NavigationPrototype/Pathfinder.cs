@@ -11,16 +11,82 @@ namespace Navigation
         [SerializeField] HexGrid hexGrid;
         public HexGrid HexGrid => hexGrid;
 
-        int EstimateRestCost(HexCell start, HexCell end)
+        // TODO(Gerald, 2025 06 18): terminate if no path to the goal exists.
+        public Path FindPath(HexCell start, HexCell goal)
         {
-            int result = HexCell.Difference(start, end);
-            return result;
-        }
+            Path result = null;
+            Path currentPath = new Path();
+            currentPath.Add(start);
 
-        int EstimateFullCost(Path path, HexCell goal)
-        {
-            int result;
-            result = path.Length + EstimateRestCost(path.End, goal);
+            Dictionary<HexCell, Path> fringe = new();
+            fringe[start] = currentPath;
+
+            HashSet<HexCell> visited = new();
+
+            IComparer<Path> comparer = Comparer<Path>.Create((p1, p2) =>
+            {
+                if (p1 == p2)
+                {
+                    return 0;
+                }
+                else if (p1 != null && visited.Contains(p1.End))
+                {
+                    return 1;
+                }
+                else if (p2 != null && visited.Contains(p2.End))
+                {
+                    return -1;
+                }
+                else
+                {
+                    int estimate1 = EstimateFullCost(p1, goal);
+                    int estimate2 = EstimateFullCost(p2, goal);
+
+                    if (estimate1 < estimate2)
+                    {
+                        return -1;
+                    }
+                    else
+                    {
+                        return 1;
+                    }
+                }
+
+            });
+
+            SortedSet<Path> paths = new(comparer);
+            paths.Add(currentPath);
+
+            bool searchSuccessful = false;
+            int debugCount = 0;
+            while (!searchSuccessful && debugCount < 1000)
+            {
+                if (debugCount >= 500)
+                {
+                    Debug.Assert(false, "probably infinite loop");
+                }
+                if (fringe.ContainsKey(goal))
+                {
+                    result = fringe[goal];
+                    searchSuccessful = true;
+                }
+                else
+                {
+                    List<HexCell> neighbors = hexGrid.GetNeighbors(currentPath.End);
+                    UpdateFringe(paths, fringe, currentPath, neighbors, visited);
+
+                    currentPath = paths.Min;
+                    debugCount++;
+                }
+            }
+            if (debugCount >= 1000)
+            {
+                Debug.LogError("looks like infinite loop");
+            }
+
+            Debug.Assert(result != null);
+            Debug.Assert(paths.Contains(result));
+            Debug.Assert(fringe.ContainsKey(goal));
 
             return result;
         }
@@ -56,88 +122,19 @@ namespace Navigation
             }
         }
 
-        // TODO(Gerald, 2025 06 18): terminate if no path to the goal exists.
-        public Path FindPath(HexCell start, HexCell goal)
+        
+        int EstimateRestCost(HexCell start, HexCell end)
         {
-            Path result = null;
-            Path currentPath = new Path();
-            currentPath.Add(start);
-
-            Dictionary<HexCell, Path> fringe = new();
-            fringe[start] = currentPath;
-
-            HashSet<HexCell> visited = new();
-
-            IComparer<Path> comparer = Comparer<Path>.Create((p1, p2) =>
-            {
-                if (p1 == p2)
-                {
-                    return 0;
-                }
-                else if (p1!=null && visited.Contains(p1.End))
-                {
-                    return 1;
-                }
-                else if (p2!=null && visited.Contains(p2.End))
-                {
-                    return -1;
-                }
-                else
-                {
-                    int estimate1 = EstimateFullCost(p1, goal);
-                    int estimate2 = EstimateFullCost(p2, goal);
-
-                    if (estimate1 < estimate2)
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        return 1;
-                    }
-                }
-            
-            });
-
-            SortedSet<Path> paths = new(comparer);            
-            paths.Add(currentPath);
-
-            bool searchSuccessful = false;
-            int debugCount = 0;
-            while (!searchSuccessful && debugCount < 1000)
-            {
-                if (debugCount >= 500)
-                {
-                    Debug.Assert(false, "probably infinite loop");
-                }
-                    if (fringe.ContainsKey(goal))
-                {
-                    result = fringe[goal];
-                    searchSuccessful = true;
-                }
-                else
-                {
-                    List<HexCell> neighbors = hexGrid.GetNeighbors(currentPath.End );                
-                    UpdateFringe(paths, fringe, currentPath, neighbors, visited);            
-                
-                    currentPath = paths.Min;
-                    debugCount++;
-                }
-            }
-            if (debugCount >= 1000)
-            {
-                Debug.LogError("looks like infinite loop");
-            }
-
-            Debug.Assert(result != null);
-            Debug.Assert(paths.Contains(result));
-            Debug.Assert(fringe.ContainsKey(goal));
-
+            int result = HexCell.Difference(start, end);
             return result;
         }
 
-        void Start()
+        int EstimateFullCost(Path path, HexCell goal)
         {
+            int result;
+            result = path.Length + EstimateRestCost(path.End, goal);
+
+            return result;
         }
     }
 
