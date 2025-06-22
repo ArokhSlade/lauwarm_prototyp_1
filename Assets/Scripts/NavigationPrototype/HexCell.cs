@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Navigation
 {
-    public struct HexCell
+    public struct HexCell : IEquatable<HexCell>
     {
         Vector2Int coords;
         public Vector2Int Coords => coords;
@@ -37,6 +38,22 @@ namespace Navigation
         public override string ToString()
         {
             return coords.ToString();
+        }
+
+        public bool Equals(HexCell other)
+        {
+            bool result = coords == other.coords;
+            return result;
+        }
+
+        public static bool operator ==(HexCell lhs, HexCell rhs)
+        {
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(HexCell lhs, HexCell rhs)
+        {
+            return !lhs.Equals(rhs);
         }
     }
 }

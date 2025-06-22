@@ -15,7 +15,13 @@ namespace Navigation
         [SerializeField] Grid grid;
         [SerializeField] float debugRadius = 1f;
 		[SerializeField] Vector3 worldCenter;
+		[SerializeField] List<Vector2Int> blockedCells = new();
+		[SerializeField] HashSet<Vector2Int> blockedCellsHashSet = new();
+
 		const HexType hexType = HexType.PointyTop;
+		
+		static HexCell invalidCell = new(int.MaxValue, int.MaxValue);
+        public static HexCell INVALID_CELL => invalidCell;
 
 		public Grid Grid => grid;
 
@@ -61,49 +67,65 @@ namespace Navigation
 			switch(hexType)
 			{
 				case HexType.FlatTop:
-					top = new(x, y + 1);
-					topLeft = new(x - 1, y + 1);
-					topRight = new(x + 1, y + 1);
-					bottom = new(x, y - 1);
-					bottomLeft = new(x - 1, y - 1);
-					bottomRight = new(x + 1, y - 1);
-					result.Add(top);
+					top = TryGetCellAt(x, y + 1);
+					topLeft = TryGetCellAt(x - 1, y + 1);
+					topRight = TryGetCellAt(x + 1, y + 1);
+					bottom = TryGetCellAt(x, y - 1);
+					bottomLeft = TryGetCellAt(x - 1, y - 1);
+					bottomRight = TryGetCellAt(x + 1, y - 1);
 					result.Add(topLeft);
+					result.Add(top);
 					result.Add(topRight);
 					result.Add(bottom);
-					result.Add(bottomLeft);
 					result.Add(bottomRight);
+					result.Add(bottomLeft);
 					break;
 				case HexType.PointyTop:
 					bool rowIsOdd = (y & 1) == 1;
 
-					left = new(x - 1, y);
-					right = new(x + 1, y);
+					left = TryGetCellAt(x - 1, y);
+					right = TryGetCellAt(x + 1, y);
 
 					if (rowIsOdd)
 					{
-						topLeft = new(x, y + 1);
-						topRight = new(x+1, y + 1);
-						bottomLeft = new(x, y - 1);
-						bottomRight = new(x + 1, y - 1);                        
+						topLeft = TryGetCellAt(x, y + 1);
+						topRight = TryGetCellAt(x+1, y + 1);
+						bottomLeft = TryGetCellAt(x, y - 1);
+						bottomRight = TryGetCellAt(x + 1, y - 1);                        
                     }
 					else
 					{
-						topLeft = new(x - 1, y + 1);
-						topRight = new(x, y + 1);
-						bottomLeft = new(x - 1, y - 1);
-						bottomRight = new(x, y - 1);
+						topLeft = TryGetCellAt(x - 1, y + 1);
+						topRight = TryGetCellAt(x, y + 1);
+						bottomLeft = TryGetCellAt(x - 1, y - 1);
+						bottomRight = TryGetCellAt(x, y - 1);
                     }
-                    result.Add(left);
-                    result.Add(topLeft);
-                    result.Add(topRight);
-                    result.Add(right);
-                    result.Add(bottomLeft);
-                    result.Add(bottomRight);
+
+                    if (left != INVALID_CELL) result.Add(left);
+                    if (topLeft != INVALID_CELL) result.Add(topLeft);
+                    if (topRight != INVALID_CELL) result.Add(topRight);
+                    if (right != INVALID_CELL) result.Add(right);
+                    if (bottomRight != INVALID_CELL) result.Add(bottomRight);
+                    if (bottomLeft != INVALID_CELL) result.Add(bottomLeft);
+
                     break;
 			}
 
             return result;
 		}
+
+		HexCell TryGetCellAt(int x, int y)
+		{
+			HexCell result = new HexCell(x, y);
+
+            if (blockedCells.Contains(new Vector2Int(x,y)))
+			{
+				result = INVALID_CELL;
+			}
+
+			return result;
+		}
+
+
     }
 }
