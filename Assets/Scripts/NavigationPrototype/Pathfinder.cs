@@ -63,7 +63,7 @@ namespace Navigation
             {
                 if (debugCount >= 500)
                 {
-                    Debug.Assert(false, "probably infinite loop");
+                    Debug.LogError("probably infinite loop");
                 }
                 if (fringe.ContainsKey(goal))
                 {
@@ -91,9 +91,10 @@ namespace Navigation
             return result;
         }
 
+
         void UpdateFringe(SortedSet<Path> paths, Dictionary<HexCell, Path> fringe, Path path, List<HexCell> neighbors, HashSet<HexCell> visited)
         {
-            visited.Add(path.End);
+            MarkVisited(paths, visited, path);
 
             foreach (var neighbor in neighbors)
             {
@@ -120,6 +121,17 @@ namespace Navigation
                     fringe[neighbor] = newPath;
                 }
             }
+        }
+
+        void MarkVisited(SortedSet<Path> paths, HashSet<HexCell> visited, Path path)
+        {
+            if (!paths.Contains(path) )
+            {
+                Debug.LogError($"{paths} does not contain {path}.");
+            }
+            paths.Remove(path);
+            visited.Add(path.End);
+            paths.Add(path);
         }
 
         
