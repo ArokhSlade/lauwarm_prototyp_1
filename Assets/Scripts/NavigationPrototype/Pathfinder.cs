@@ -3,59 +3,44 @@ using System.Collections.Generic;
 using Utils;
 using Unity.VisualScripting;
 using NUnit.Framework;
+using System.Linq;
 
 namespace Navigation
 {
+    class HexBucketList
+    {
+        class HexBucket
+        {
+            Queue<HexCell> cells;
+        }
+
+        SortedDictionary<int, HexBucket> prioBuckets;
+
+    }
+
     public class Pathfinder : MonoBehaviour
     {
         [SerializeField] HexGrid hexGrid;
         public HexGrid HexGrid => hexGrid;
 
         // TODO(Gerald, 2025 06 18): terminate if no path to the goal exists.
+        // NOTE(Gerald, 2025 06 22): optimization idea: instead of storing paths, store predecessor for each head
+        // then we can reconstruct the shortest path once a head equals goal.
         public Path FindPath(HexCell start, HexCell goal)
         {
             Path result = null;
             Path currentPath = new Path();
-            currentPath.Add(start);
+            HexCell currentHead = start;
+            currentPath.Add(currentHead);
 
-            Dictionary<HexCell, Path> fringe = new();
-            fringe[start] = currentPath;
+            SortedDictionary<int, HashSet<HexCell>> fringe = new();
+            Dictionary<HexCell, int> visited = new();
+            Dictionary<HexCell, Path> paths = new();
 
-            HashSet<HexCell> visited = new();
-
-            IComparer<Path> comparer = Comparer<Path>.Create((p1, p2) =>
-            {
-                if (p1 == p2)
-                {
-                    return 0;
-                }
-                else if (p1 != null && visited.Contains(p1.End))
-                {
-                    return 1;
-                }
-                else if (p2 != null && visited.Contains(p2.End))
-                {
-                    return -1;
-                }
-                else
-                {
-                    int estimate1 = EstimateFullCost(p1, goal);
-                    int estimate2 = EstimateFullCost(p2, goal);
-
-                    if (estimate1 < estimate2)
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        return 1;
-                    }
-                }
-
-            });
-
-            SortedSet<Path> paths = new(comparer);
-            paths.Add(currentPath);
+            int currentCost = EstimateFullCost(currentPath, goal);
+            AddToFringe(fringe, currentCost, currentHead);
+            
+            paths[currentHead] = currentPath;
 
             bool searchSuccessful = false;
             int debugCount = 0;
@@ -65,17 +50,101 @@ namespace Navigation
                 {
                     Debug.LogError("probably infinite loop");
                 }
-                if (fringe.ContainsKey(goal))
+                if (paths.ContainsKey(goal))
                 {
-                    result = fringe[goal];
+                    result = paths[goal];
                     searchSuccessful = true;
                 }
                 else
                 {
-                    List<HexCell> neighbors = hexGrid.GetNeighbors(currentPath.End);
-                    UpdateFringe(paths, fringe, currentPath, neighbors, visited);
+                    List<HexCell> neighbors = hexGrid.GetNeighbors(currentHead);
+                    // - remove currentHead from fringe
+                    Debug.Assert(fringe.ContainsKey(currentCost));
+                    Debug.Assert(fringe[currentCost].Contains(currentHead));
+                    fringe[currentCost].Remove(currentHead);
+                    // - put currentHead into visited
+                    Debug.Assert(false == visited.ContainsKey(currentHead));
+                    visited[currentHead] = currentCost;
+                    // - process neighbor nodes as follows (i.e. add them to the fringe if applicable, update where necessary):
+                    foreach (HexCell neighbor in neighbors)
+                    {
+                        // - if they don't exist (as keys) in paths:
+                        if (!paths.ContainsKey(neighbor))
+                        {
+                            // |- create a path for them and store it in paths,
+                            Path neighborPath = currentPath.Clone();
+                            neighborPath.Add(neighbor);
+                            paths[neighbor] = neighborPath;
 
-                    currentPath = paths.Min;
+                            // |- add them to the fringe in the appropriate bucket
+                            //    (potential optimization: put them at the front of the queue,
+                            //     i.e. prefer longer paths / depth first search)
+                            int neighborCost = EstimateFullCost(neighborPath, goal);
+                            AddToFringe(fringe, neighborCost, neighbor);
+                        }
+                        // - else (i.e. they do exist already):
+                        else // true == paths.ContainsKey(neighbor)
+                        {
+                            // |- re-compute their old cost from their path-entry
+                            int oldNeighborCost = EstimateFullCost(paths[neighbor], goal);
+                            // |- estimate their new cost with the current path
+                            int newNeighborCost = EstimateRestCost(neighbor, goal) + 1 + currentPath.Length;
+                            // |- if their new cost is cheaper:
+                            if (newNeighborCost < oldNeighborCost)
+                            {
+                                //  |- create a new path for them and update their entry in paths
+                                Path neighborPath = currentPath.Clone();
+                                neighborPath.Add(neighbor);
+                                paths[neighbor] = neighborPath;
+
+                                //  |- if they are in visited:
+                                if (visited.ContainsKey(neighbor))
+                                {
+                                    //   |- remove them from visited
+                                    visited.Remove(neighbor);
+                                    //   |- re-add them in the fringe (in their new bucket)
+                                    Debug.Assert(fringe.ContainsKey(newNeighborCost));
+                                    Debug.Assert(false == fringe[newNeighborCost].Contains(neighbor));
+                                    fringe[newNeighborCost].Add(neighbor);
+                                //  |- else (i.e. they are NOT in visited):
+                                }
+                                else
+                                {
+                                    //   |- remove them from their current bucket
+                                    Debug.Assert(fringe.ContainsKey(oldNeighborCost));
+                                    Debug.Assert(fringe[oldNeighborCost].Contains(neighbor));
+                                    fringe[oldNeighborCost].Remove(neighbor);
+                                    //   |- re-add them to their new bucket
+                                    AddToFringe(fringe, newNeighborCost, neighbor);
+
+                                }
+                            }
+                        }
+                    }
+                    // - set currentHead to the "Min" element of the fringe,
+                    //   i.e. any element in the first bucket.
+                    bool fringeElementFound = false;
+                    foreach (var bucket in fringe)
+                    {
+                        if (bucket.Value.Count > 0)
+                        {
+                            fringeElementFound = true;
+
+                            // get first element from the bucket
+                            var bucketEnumerator = bucket.Value.GetEnumerator();
+                            bucketEnumerator.MoveNext();
+
+                            currentHead = bucketEnumerator.Current;
+                            break;
+                        }
+                    }
+                    Debug.Assert(fringeElementFound);
+
+                    // - update CurrentPath and currentCost
+                    Debug.Assert(paths.ContainsKey(currentHead));
+                    currentPath = paths[currentHead];
+                    currentCost = EstimateFullCost(currentPath, goal);
+
                     debugCount++;
                 }
             }
@@ -85,53 +154,22 @@ namespace Navigation
             }
 
             Debug.Assert(result != null);
-            Debug.Assert(paths.Contains(result));
-            Debug.Assert(fringe.ContainsKey(goal));
+            Debug.Assert(paths.ContainsKey(goal));
+            int resultCost = EstimateFullCost(paths[goal], goal);
+            Debug.Assert(fringe.ContainsKey(resultCost));
+            Debug.Assert(fringe[resultCost].Contains(goal));
+            Debug.Assert(!visited.ContainsKey(goal));
 
             return result;
         }
 
-
-        void UpdateFringe(SortedSet<Path> paths, Dictionary<HexCell, Path> fringe, Path path, List<HexCell> neighbors, HashSet<HexCell> visited)
+        void AddToFringe(SortedDictionary<int, HashSet<HexCell>> fringe, int cost, HexCell cell)
         {
-            MarkVisited(paths, visited, path);
-
-            foreach (var neighbor in neighbors)
+            if (!fringe.ContainsKey(cost))
             {
-                Path newPath = path.Clone();
-                newPath.Add(neighbor);
-
-                bool alreadyDiscovered = fringe.ContainsKey(neighbor);
-                if (alreadyDiscovered)
-                {
-                    Path oldPath = fringe[neighbor];
-                    bool newPathIsCheaper = newPath.Length < oldPath.Length;
-
-                    if (newPathIsCheaper)
-                    {
-                        paths.Remove(oldPath);
-                        paths.Add(newPath);
-                        fringe[neighbor] = newPath;
-                    }
-                }
-                else
-                {
-
-                    paths.Add(newPath);
-                    fringe[neighbor] = newPath;
-                }
+                fringe[cost] = new HashSet<HexCell>();
             }
-        }
-
-        void MarkVisited(SortedSet<Path> paths, HashSet<HexCell> visited, Path path)
-        {
-            if (!paths.Contains(path) )
-            {
-                Debug.LogError($"{paths} does not contain {path}.");
-            }
-            paths.Remove(path);
-            visited.Add(path.End);
-            paths.Add(path);
+            fringe[cost].Add(cell);
         }
 
         
@@ -143,6 +181,7 @@ namespace Navigation
 
         int EstimateFullCost(Path path, HexCell goal)
         {
+            Debug.Assert(path != null);
             int result;
             result = path.Length + EstimateRestCost(path.End, goal);
 
