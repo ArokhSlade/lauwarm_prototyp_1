@@ -33,5 +33,10 @@ namespace Navigation
 
             return result;
         }
+
+        public override string ToString()
+        {
+            return coords.ToString();
+        }
     }
 }
