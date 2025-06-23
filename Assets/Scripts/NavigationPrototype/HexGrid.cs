@@ -41,18 +41,6 @@ namespace Navigation
 					Gizmos.DrawSphere(cellCenter, debugRadius);
 				}
 			}
-
-			//Debug.Log($"{grid.GetLayoutCellCenter()}");
-			//for (int x = 0; x < dimensions.x; ++x)
-			//{
-			//	for (int y = 0; y < dimensions.y; ++y)
-			//	{
-			//		var cellCoords = new Vector2Int(x, y);
-			//		cellCoords -= dimensions / 2;
-			//		var cellV3 = new Vector3Int(x, 0, y);
-			//		Vector3 cellCenter = grid.GetCellCenterWorld(cellV3);
-			//	}
-			//}
 		}
 
 
