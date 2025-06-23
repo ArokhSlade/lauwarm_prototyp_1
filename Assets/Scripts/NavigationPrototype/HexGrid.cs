@@ -13,7 +13,7 @@ namespace Navigation
     {
 		[SerializeField] Vector2Int dimensions;
         [SerializeField] Grid grid;
-        [SerializeField] float debugRadius = 1f;
+        [SerializeField] float debugRadius = .5f;
 		[SerializeField] Vector3 worldCenter;
 		[SerializeField] List<Vector2Int> blockedCells = new();
 		[SerializeField] HashSet<Vector2Int> blockedCellsHashSet = new();
