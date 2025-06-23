@@ -6,7 +6,11 @@ using UnityEngine;
 
 namespace TicTacToe
 {
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 84010bb5600eb056863394ad1c773163e26b5a8c
     public class HumanInput : MonoBehaviour
     {
         [SerializeField] LayerMask layerMask;
@@ -34,7 +38,11 @@ namespace TicTacToe
             {
                 return;
             }
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> 84010bb5600eb056863394ad1c773163e26b5a8c
             Field field = hit.collider.GetComponent<Field>();
             if (field == null)
             {
